@@ -5,6 +5,8 @@ from itertools import combinations
 from statispy.anova.sphericity import greenhouse_geisser, huynh_feldt
 _shapiro = shapiro  # backup
 
+__all__ = ['rm_anova', 'combinations_t_test']
+
 
 def shapiro(x):
     """

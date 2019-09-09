@@ -1,6 +1,8 @@
 from numpy import var, mean, sum
 from scipy import stats
 
+__all__ = ['intraclass']
+
 
 def intraclass(y, icc_type, alpha=0.05, r0=0):
     """
