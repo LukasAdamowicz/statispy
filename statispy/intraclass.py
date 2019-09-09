@@ -2,7 +2,7 @@ from numpy import var, mean, sum
 from scipy import stats
 
 
-def ICC(y, icc_type, alpha=0.05, r0=0):
+def intraclass(y, icc_type, alpha=0.05, r0=0):
     """
     Intraclass correlation
 
