@@ -4,7 +4,7 @@ from scipy import stats
 __all__ = ['intraclass']
 
 
-def intraclass(y, icc_type, alpha=0.05, r0=0, ignore_nan=True):
+def intraclass(y, icc_type, alpha=0.05, r0=0):
     """
     Intraclass correlation
 
@@ -18,9 +18,6 @@ def intraclass(y, icc_type, alpha=0.05, r0=0, ignore_nan=True):
         Statistical significance level. Default is 0.05
     r0 : float, optional
         Value to test the intraclass correlation coefficient against. Default is 0
-    ignore_nan : bool, optional
-        Ignore NaN values in the data. Default is True
-
     Returns
     -------
     r : float
@@ -59,18 +56,11 @@ def intraclass(y, icc_type, alpha=0.05, r0=0, ignore_nan=True):
     """
     n, k = y.shape
 
-    if ignore_nan:
-        ss_total = nanvar(y, ddof=1) * (n * k - 1)
-        msr = nanvar(nanmean(y, axis=1), ddof=1) * k
-        msw = nansum(nanvar(y, axis=1)) / n
-        msc = nanvar(nanmean(y, axis=0), ddof=1) * n
-        mse = (ss_total - msr * (n - 1) - msc * (k - 1)) / ((n - 1) * (k - 1))
-    else:
-        ss_total = var(y, ddof=1) * (n * k - 1)
-        msr = var(mean(y, axis=1), ddof=1) * k
-        msw = sum(var(y, axis=1)) / n
-        msc = var(mean(y, axis=0), ddof=1) * n
-        mse = (ss_total - msr * (n - 1) - msc * (k - 1)) / ((n - 1) * (k - 1))
+    ss_total = var(y, ddof=1) * (n * k - 1)
+    msr = var(mean(y, axis=1), ddof=1) * k
+    msw = sum(var(y, axis=1, ddof=1)) / n
+    msc = var(mean(y, axis=0), ddof=1) * n
+    mse = (ss_total - msr * (n - 1) - msc * (k - 1)) / ((n - 1) * (k - 1))
 
     if icc_type == '1-1':
         result = _icc_11(msr, msw, n, k, alpha=alpha, r0=r0)
@@ -147,10 +137,10 @@ def _icc_ck(ms_r, ms_e, n_target, n_rater, alpha=0.05, r0=0.):
 
 
 def _icc_a1(ms_r, ms_e, ms_c, n_target, n_rater, alpha=0.05, r0=0.):
-    r = (ms_r - ms_e) / (ms_r + (n_target - 1) * ms_e + n_target * (ms_c - ms_e) / n_target)
+    r = (ms_r - ms_e) / (ms_r + (n_rater - 1) * ms_e + n_rater * (ms_c - ms_e) / n_target)
 
     a = (n_rater * r0) / (n_target * (1 - r0))
-    b = 1 + (n_target * r0 * (n_target - 1)) / (n_target * (1 - r0))
+    b = 1 + (n_rater * r0 * (n_target - 1)) / (n_target * (1 - r0))
     F = ms_r / (a * ms_c + b * ms_e)
 
     a = n_rater * r / (n_target * (1 - r))
