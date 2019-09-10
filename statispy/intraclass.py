@@ -62,13 +62,13 @@ def intraclass(y, icc_type, alpha=0.05, r0=0, ignore_nan=True):
     if ignore_nan:
         ss_total = nanvar(y, ddof=1) * (n * k - 1)
         msr = nanvar(nanmean(y, axis=1), ddof=1) * k
-        msw = nansum(nanvar(y, ddof=1, axis=1)) / n
+        msw = nansum(nanvar(y, axis=1)) / n
         msc = nanvar(nanmean(y, axis=0), ddof=1) * n
         mse = (ss_total - msr * (n - 1) - msc * (k - 1)) / ((n - 1) * (k - 1))
     else:
         ss_total = var(y, ddof=1) * (n * k - 1)
         msr = var(mean(y, axis=1), ddof=1) * k
-        msw = sum(var(y, ddof=1, axis=1)) / n
+        msw = sum(var(y, axis=1)) / n
         msc = var(mean(y, axis=0), ddof=1) * n
         mse = (ss_total - msr * (n - 1) - msc * (k - 1)) / ((n - 1) * (k - 1))
 
