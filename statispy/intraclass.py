@@ -18,6 +18,7 @@ def intraclass(y, icc_type, alpha=0.05, r0=0):
         Statistical significance level. Default is 0.05
     r0 : float, optional
         Value to test the intraclass correlation coefficient against. Default is 0
+        
     Returns
     -------
     r : float
